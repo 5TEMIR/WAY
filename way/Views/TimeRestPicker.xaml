@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="way.Views.TimeRestPicker"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:way.ViewModels"
+    x:Name="TimeRestPickerView"
+    x:DataType="viewmodels:TimeRestPickerViewModel"
+    Shell.PresentationMode="ModalNotAnimated"
+    Shell.TabBarIsVisible="False"
+    VerticalOptions="End"
+    Color="Transparent">
+
+    <Grid RowDefinitions="auto,auto">
+
+        <BoxView Grid.Row="0" BackgroundColor="{StaticResource Gray950}" />
+        <ImageButton
+            Grid.Row="0"
+            Command="{Binding CloseCommand}"
+            CommandParameter="{x:Reference TimeRestPickerView}"
+            HeightRequest="28"
+            HorizontalOptions="End"
+            Source="{mi:FluentFilled Icon=Dismiss28Filled,
+                                     IconColor={StaticResource White}}" />
+
+        <BoxView Grid.Row="1" BackgroundColor="{StaticResource Gray900}" />
+        <BoxView
+            Grid.Row="1"
+            BackgroundColor="{StaticResource Gray800}"
+            HeightRequest="28" />
+        <Grid
+            Grid.Row="1"
+            Margin="70,0"
+            ColumnDefinitions="*,*">
+
+            <Label
+                Grid.Column="0"
+                Margin="56,0,0,0"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="мин"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center" />
+
+            <Label
+                Grid.Column="1"
+                Margin="56,0,0,0"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="сек"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center" />
+
+            <CarouselView
+                Grid.Column="0"
+                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=OperatingTimeRestMin}"
+                HeightRequest="140"
+                ItemsSource="{Binding Times}"
+                PeekAreaInsets="56"
+                VerticalScrollBarVisibility="Never">
+                <CarouselView.ItemsLayout>
+                    <LinearItemsLayout
+                        ItemSpacing="0"
+                        Orientation="Vertical"
+                        SnapPointsAlignment="Center"
+                        SnapPointsType="Mandatory" />
+                </CarouselView.ItemsLayout>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="x:Int32">
+                        <Label
+                            HorizontalOptions="Center"
+                            Text="{Binding .}"
+                            VerticalOptions="Center" />
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <CarouselView
+                Grid.Column="1"
+                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=OperatingTimeRestSec}"
+                HeightRequest="140"
+                ItemsSource="{Binding Times}"
+                PeekAreaInsets="56"
+                VerticalScrollBarVisibility="Never">
+                <CarouselView.ItemsLayout>
+                    <LinearItemsLayout
+                        ItemSpacing="0"
+                        Orientation="Vertical"
+                        SnapPointsAlignment="Center"
+                        SnapPointsType="Mandatory" />
+                </CarouselView.ItemsLayout>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="x:Int32">
+                        <Label
+                            HorizontalOptions="Center"
+                            Text="{Binding .}"
+                            VerticalOptions="Center" />
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+        </Grid>
+
+    </Grid>
+
+    <!--<VerticalStackLayout>
+        <Entry
+            x:DataType="viewmodels:ExerciseViewModel"
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}}"
+            Keyboard="Numeric"
+            Text="{Binding OperatingTimeRestMin}" />
+        <Button
+            Command="{Binding TestbuttonCommand}"
+            CommandParameter="{x:Reference TimeRestPickerView}"
+            Text="test" />
+    </VerticalStackLayout>-->
+</toolkit:Popup>

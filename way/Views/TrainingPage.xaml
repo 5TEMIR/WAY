@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="way.Views.TrainingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:models="clr-namespace:way.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:way.ViewModels"
+    Title="Тренировка"
+    x:DataType="viewmodels:TrainingViewModel"
+    Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="auto,auto,auto,*">
+
+
+        <BoxView
+            Grid.Row="0"
+            Margin="10"
+            BackgroundColor="{StaticResource Gray900}"
+            CornerRadius="10" />
+        <HorizontalStackLayout
+            Grid.Row="0"
+            Margin="20,10"
+            VerticalOptions="Center">
+            <DatePicker
+                Date="{Binding OperatingDate}"
+                Format="dd.MM.yyyy"
+                HorizontalOptions="Start"
+                VerticalOptions="Center" />
+            <Label Text="{Binding OperatingWeekday}" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding OperatingExercises}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CurrentWorkout">
+                    <SwipeView android:SwipeView.SwipeTransitionMode="Drag" ios:SwipeView.SwipeTransitionMode="Drag">
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem
+                                    BackgroundColor="{StaticResource Coral Red}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TrainingViewModel}}, Path=DeleteExerciseCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Text="Удалить" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid BackgroundColor="Black" RowDefinitions="*,1">
+                            <Label
+                                Grid.Row="0"
+                                Margin="20,10"
+                                Text="{Binding ExerciseLabel}" />
+                            <BoxView
+                                Grid.Row="1"
+                                Margin="10,0"
+                                BackgroundColor="{StaticResource Gray800}"
+                                HeightRequest="1" />
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.Triggers>
+                <DataTrigger
+                    Binding="{Binding OperatingExercises.Count}"
+                    TargetType="CollectionView"
+                    Value="0">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </CollectionView.Triggers>
+        </CollectionView>
+        <Button
+            Grid.Row="2"
+            Margin="10"
+            Command="{Binding GoToExersiceCommand}"
+            HorizontalOptions="Center"
+            Text="Добавить упражнение" />
+        <Button
+            Grid.Row="3"
+            Margin="10"
+            Command="{Binding GoToTrainingsCommand}"
+            HorizontalOptions="Center"
+            IsEnabled="{Binding TrainingIsReady}"
+            Text="Сохранить тренировку"
+            VerticalOptions="End" />
+    </Grid>
+
+</ContentPage>

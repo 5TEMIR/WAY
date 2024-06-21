@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="way.Views.ExercisePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:data="clr-namespace:way.Data"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:models="clr-namespace:way.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:way.ViewModels"
+    Title="Упражнение"
+    x:DataType="viewmodels:ExerciseViewModel"
+    HideSoftInputOnTapped="True"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            Command="{Binding ShowKeyboardCommand}"
+            CommandParameter="{x:Reference Name=EntryTitle}"
+            EventName="NavigatedTo" />
+    </ContentPage.Behaviors>
+
+    <Grid
+        Margin="10"
+        ColumnDefinitions="*,*"
+        ColumnSpacing="10"
+        RowDefinitions="44,44,24,44,*,44"
+        RowSpacing="10">
+
+        <BoxView
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            BackgroundColor="{StaticResource Gray900}"
+            CornerRadius="10" />
+        <Entry
+            x:Name="EntryTitle"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="10,0,10,0"
+            toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Null}"
+            MaxLength="45"
+            Placeholder="Название упражнения"
+            ReturnType="Next"
+            Text="{Binding OperatingTitle}"
+            VerticalOptions="Center" />
+
+        <Label
+            Grid.Row="1"
+            Margin="10,0,10,0"
+            FontSize="Title"
+            Text="{Binding OperatingSets.Count, StringFormat='Подходы: {0}'}"
+            VerticalTextAlignment="Center" />
+
+        <Label
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10,0,10,0"
+            FontSize="Title"
+            IsVisible="{Binding RestIsVisible}"
+            Text="{Binding OperatingTimeRest, StringFormat='Отдых: {0}'}"
+            VerticalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DisplayTimeRestPickerPopupCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="10,0,10,0"
+            ColumnDefinitions="16,*,*"
+            VerticalOptions="End">
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                HorizontalTextAlignment="Center"
+                Text="Reps" />
+            <Label
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="10,0,0,0"
+                HorizontalTextAlignment="Center"
+                Text="Kg" />
+        </Grid>
+
+        <BoxView
+            Grid.Row="3"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource Gray900}"
+            CornerRadius="10" />
+        <CollectionView
+            Grid.Row="3"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Margin="10,0,10,0"
+            ItemsSource="{Binding OperatingSets}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="0" Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:OperatingSet">
+                    <Grid ColumnDefinitions="16,*,*" RowDefinitions="*,auto">
+                        <Grid>
+                            <BoxView
+                                BackgroundColor="{StaticResource Coral Red}"
+                                CornerRadius="8"
+                                HeightRequest="16"
+                                WidthRequest="16" />
+                            <BoxView
+                                BackgroundColor="White"
+                                CornerRadius="1"
+                                HeightRequest="2"
+                                WidthRequest="10" />
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=DeleteSetCommand}" CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <BoxView
+                            Grid.Column="1"
+                            Margin="10,10,0,10"
+                            BackgroundColor="{StaticResource Gray800}"
+                            CornerRadius="10" />
+                        <Entry
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Null}"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="3"
+                            ReturnType="Next"
+                            Text="{Binding R}"
+                            VerticalTextAlignment="Center">
+                            <Entry.Behaviors>
+                                <toolkit:SelectAllTextBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+
+                        <BoxView
+                            Grid.Column="2"
+                            Margin="10,10,0,10"
+                            BackgroundColor="{StaticResource Gray800}"
+                            CornerRadius="10" />
+                        <Entry
+                            Grid.Column="2"
+                            Margin="10,0,0,0"
+                            toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Null}"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="5"
+                            ReturnType="Next"
+                            Text="{Binding W}"
+                            VerticalTextAlignment="Center">
+                            <Entry.Behaviors>
+                                <toolkit:SelectAllTextBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button
+            Grid.Row="3"
+            Grid.Column="1"
+            Command="{Binding AddSetCommand}"
+            Text="Добавить подход"
+            VerticalOptions="Start" />
+
+        <Button
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Command="{Binding GoToTrainingCommand}"
+            HorizontalOptions="Center"
+            IsEnabled="{Binding ExerciseIsReady}"
+            Text="Сохранить упражнение" />
+
+    </Grid>
+
+</ContentPage>

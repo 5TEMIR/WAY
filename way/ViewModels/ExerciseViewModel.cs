@@ -1,0 +1,181 @@
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Platform;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Runtime.Versioning;
+using way.Models;
+
+namespace way.ViewModels
+{
+    [QueryProperty("OperatingExercise", "Exercise")]
+    public partial class ExerciseViewModel : ObservableObject
+    {
+        private readonly IPopupService popupService;
+
+        public ExerciseViewModel(IPopupService popupservice)
+        {
+            popupService = popupservice;
+
+            OperatingSets.Add(new OperatingSet(0, 0));
+        }
+
+        [ObservableProperty]
+        private CurrentWorkout? _operatingExercise = null;
+
+        //partial void OnOperatingExerciseChanged(Exercise value)
+        //{
+        //    OperatingTitle = value.Title;
+        //    foreach (var reps in value.Reps)
+        //    {
+        //        OperatingReps.Add(reps);
+        //    }
+        //    OperatingTimeRestMin = value.TimeRest / 60;
+        //    OperatingTimeRestSec = value.TimeRest - OperatingTimeRestMin * 60;
+        //}
+
+        [ObservableProperty]
+        private string _operatingTitle = string.Empty;
+
+        partial void OnOperatingTitleChanged(string value) { CheckExerciseReady(); }
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(OperatingTimeRest))]
+        private int _operatingTimeRestMin = 0;
+
+        partial void OnOperatingTimeRestMinChanged(int value) { CheckExerciseReady(); }
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(OperatingTimeRest))]
+        private int _operatingTimeRestSec = 0;
+
+        partial void OnOperatingTimeRestSecChanged(int value) { CheckExerciseReady(); }
+
+        [ObservableProperty]
+        private ObservableCollection<OperatingSet> _operatingSets = [];
+
+        [ObservableProperty]
+        private bool _restIsVisible = false;
+
+        [ObservableProperty]
+        private bool _exerciseIsReady = false;
+
+        private void CheckExerciseReady()
+        {
+            if (OperatingTitle.Length > 0)
+            {
+                if (OperatingSets.Count > 1 && (OperatingTimeRestMin > 0 || OperatingTimeRestSec > 0))
+                    ExerciseIsReady = true;
+                else if (OperatingSets.Count == 1)
+                    ExerciseIsReady = true;
+                else ExerciseIsReady = false;
+            }
+            else ExerciseIsReady = false;
+        }
+
+        public string OperatingTimeRest
+        {
+            get
+            {
+                if (OperatingTimeRestMin >= 10 && OperatingTimeRestSec >= 10)
+                    return $"{OperatingTimeRestMin}:{OperatingTimeRestSec}";
+
+                else if (OperatingTimeRestMin >= 10 && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                    return $"{OperatingTimeRestMin}:0{OperatingTimeRestSec}";
+
+                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && OperatingTimeRestSec >= 10)
+                    return $"0{OperatingTimeRestMin}:{OperatingTimeRestSec}";
+
+                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                    return $"0{OperatingTimeRestMin}:0{OperatingTimeRestSec}";
+
+                else if (OperatingTimeRestMin == 0 && OperatingTimeRestSec >= 10)
+                    return $"00:{OperatingTimeRestSec}";
+
+                else if (OperatingTimeRestMin == 0 && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                    return $"00:0{OperatingTimeRestSec}";
+
+                else if (OperatingTimeRestMin >= 10 && OperatingTimeRestSec == 0)
+                    return $"{OperatingTimeRestMin}:00";
+
+                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && OperatingTimeRestSec == 0)
+                    return $"0{OperatingTimeRestMin}:00";
+
+                else return "00:00";
+            }
+        }
+
+        [RelayCommand]
+        private void AddSet()
+        {
+            if (OperatingSets.Count > 0)
+            {
+                OperatingSets.Add(new OperatingSet(OperatingSets.Last().R, OperatingSets.Last().W));
+            }
+            else
+            {
+                OperatingSets.Add(new OperatingSet(0, 0));
+            }
+
+            if (OperatingSets.Count > 1) { RestIsVisible = true; }
+
+            CheckExerciseReady();
+        }
+
+        [RelayCommand]
+        private void DeleteSet(OperatingSet set)
+        {
+            OperatingSets.Remove(set);
+
+            if (OperatingSets.Count <= 1)
+            {
+                RestIsVisible = false;
+                OperatingTimeRestMin = 0;
+                OperatingTimeRestSec = 0;
+            }
+
+            CheckExerciseReady();
+        }
+
+        [RelayCommand]
+        private async Task DisplayTimeRestPickerPopupAsync()
+        {
+            await popupService.ShowPopupAsync<TimeRestPickerViewModel>();
+        }
+
+        [RelayCommand]
+        private async Task GoToTrainingAsync()
+        {
+            foreach (OperatingSet set in OperatingSets)
+            {
+                if (set.R == 0)
+                {
+                    await Shell.Current.DisplayAlert("Не указано количество повторений", "Укажите количество повторений.", "OK");
+                    return;
+                }
+            }
+
+            OperatingExercise = new()
+            {
+                ExerciseName = OperatingTitle.ToLower(),
+                CountSets = OperatingSets.Count,
+                TimeRest = OperatingTimeRestMin * 60 + OperatingTimeRestSec
+            };
+            OperatingExercise.SetSets([.. OperatingSets]);
+
+            await Shell.Current.GoToAsync("..", true,
+                new Dictionary<string, object> { { "Exercise", OperatingExercise } });
+        }
+
+        [RelayCommand]
+        [UnsupportedOSPlatform("MacCatalyst")]
+        private async Task OnShowKeyboard(ITextInput view, CancellationToken token)
+        {
+            try
+            {
+                await view.ShowKeyboardAsync(token);
+            }
+            catch (Exception) { }
+        }
+    }
+}

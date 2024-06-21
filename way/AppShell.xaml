@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="way.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:views="clr-namespace:way.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="{StaticResource Primary}">
+
+    <TabBar>
+        <ShellContent
+            Title="Тренировки"
+            ContentTemplate="{DataTemplate views:TrainingsPage}"
+            Icon="{mi:FluentFilled Icon=List24Filled,
+                                   IconColor={StaticResource White}}" />
+        <ShellContent
+            Title="Прогресс"
+            ContentTemplate="{DataTemplate views:StatisticsPage}"
+            Icon="{mi:FluentFilled Icon=ArrowTrendingLines24Filled,
+                                   IconColor={StaticResource White}}" />
+    </TabBar>
+
+</Shell>
