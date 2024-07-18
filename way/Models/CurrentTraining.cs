@@ -38,7 +38,7 @@
                     TrainingText = $"⚡ {DateString} ⚡\n\n";
                     foreach (CurrentWorkout workout in Workouts)
                     {
-                        TrainingText += $"{workout.ExerciseLabel}\n\n";
+                        TrainingText += $"{workout.WorkoutLabel}\n\n";
                     }
                     return TrainingText.Remove(TrainingText.Length - 2);
                 }

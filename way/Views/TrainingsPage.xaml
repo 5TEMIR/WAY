@@ -20,17 +20,19 @@
 
         <CollectionView
             Grid.Row="0"
-            Margin="10,0"
             ItemsSource="{Binding Trainings}"
             ItemsUpdatingScrollMode="KeepScrollOffset"
             RemainingItemsThreshold="0"
             RemainingItemsThresholdReachedCommand="{Binding LoadTrainingsIncrementlyCommand}">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                <LinearItemsLayout Orientation="Vertical" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CurrentTraining">
-                    <Border StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                    <Border
+                        Margin="10,10,10,0"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0">
                         <SwipeView android:SwipeView.SwipeTransitionMode="Drag" ios:SwipeView.SwipeTransitionMode="Drag">
                             <SwipeView.RightItems>
                                 <SwipeItems SwipeBehaviorOnInvoked="Close">
@@ -53,6 +55,7 @@
 
         <ActivityIndicator
             Grid.Row="0"
+            Margin="10"
             HorizontalOptions="Center"
             IsRunning="{Binding IsBusy}"
             VerticalOptions="Start" />

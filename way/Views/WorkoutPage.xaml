@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="way.Views.ExercisePage"
+    x:Class="way.Views.WorkoutPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
@@ -11,7 +11,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:way.ViewModels"
     Title="Упражнение"
-    x:DataType="viewmodels:ExerciseViewModel"
+    x:DataType="viewmodels:WorkoutViewModel"
     HideSoftInputOnTapped="True"
     Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
@@ -117,7 +117,7 @@
                                 HeightRequest="2"
                                 WidthRequest="10" />
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=DeleteSetCommand}" CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=DeleteSetCommand}" CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
                         </Grid>
 
@@ -178,7 +178,7 @@
             Grid.ColumnSpan="2"
             Command="{Binding GoToTrainingCommand}"
             HorizontalOptions="Center"
-            IsEnabled="{Binding ExerciseIsReady}"
+            IsEnabled="{Binding WorkoutIsReady}"
             Text="Сохранить упражнение" />
 
     </Grid>

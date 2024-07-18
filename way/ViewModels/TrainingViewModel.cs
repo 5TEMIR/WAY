@@ -7,8 +7,7 @@ using way.Views;
 
 namespace way.ViewModels
 {
-    [QueryProperty("OperatingExercise", "Exercise")]
-    [QueryProperty("OperatingTraining", "Training")]
+    [QueryProperty("OperatingWorkout", "Workout")]
     public partial class TrainingViewModel : ObservableObject
     {
         private readonly DataBaseContext WorkoutDataBase;
@@ -19,49 +18,30 @@ namespace way.ViewModels
         }
 
         [ObservableProperty]
-        private CurrentWorkout? _operatingExercise = null;
+        private CurrentWorkout? _operatingWorkout = null;
 
-        partial void OnOperatingExerciseChanged(CurrentWorkout? oldValue, CurrentWorkout? newValue)
+        partial void OnOperatingWorkoutChanged(CurrentWorkout? oldValue, CurrentWorkout? newValue)
         {
-            if (OperatingExercise is not null && newValue != oldValue)
+            if (OperatingWorkout is not null && newValue != oldValue)
             {
-                OperatingExercises.Add(OperatingExercise);
+                OperatingWorkouts.Add(OperatingWorkout);
                 TrainingIsReady = true;
             }
         }
-
-        [ObservableProperty]
-        private Training? _operatingTraining = null;
-
-        //partial void OnOperatingTrainingChanged(Training? value)
-        //{
-        //    if (OperatingTraining is not null)
-        //    {
-        //        OperatingDate = OperatingTraining.Date;
-        //        List<Exercise>? exercises = OperatingTraining.GetExercises();
-        //        if (exercises is not null)
-        //        {
-        //            foreach (var exercise in exercises)
-        //            {
-        //                OperatingExercises?.Add(exercise);
-        //            }
-        //        }
-        //    }
-        //}
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(OperatingWeekday))]
         private DateTime _operatingDate = DateTime.Today;
 
         [ObservableProperty]
-        private ObservableCollection<CurrentWorkout> _operatingExercises = [];
+        private ObservableCollection<CurrentWorkout> _operatingWorkouts = [];
 
         [RelayCommand]
-        private void DeleteExercise(CurrentWorkout exercise)
+        private void DeleteWorkout(CurrentWorkout workout)
         {
-            OperatingExercises.Remove(exercise);
+            OperatingWorkouts.Remove(workout);
 
-            if (OperatingExercises.Count == 0) TrainingIsReady = false;
+            if (OperatingWorkouts.Count == 0) TrainingIsReady = false;
         }
 
         [ObservableProperty]
@@ -90,13 +70,9 @@ namespace way.ViewModels
         }
 
         [RelayCommand]
-        private async Task GoToExersiceAsync(Exercise? exercise)
+        private async Task GoToWorkoutAsync()
         {
-            if (exercise == null)
-                await Shell.Current.GoToAsync(nameof(ExercisePage), true);
-            else
-                await Shell.Current.GoToAsync(nameof(ExercisePage), true,
-                    new Dictionary<string, object> { { "Exercise", exercise } });
+            await Shell.Current.GoToAsync(nameof(WorkoutPage), true);
         }
 
         [RelayCommand]
@@ -106,12 +82,13 @@ namespace way.ViewModels
                 OperatingDate = DateTime.Now;
 
             int trainingid = await WorkoutDataBase.SaveTrainingAsync(new() { TrainingDate = OperatingDate });
-            
+
             List<Workout> workouts = [];
-            foreach (CurrentWorkout workout in OperatingExercises)
+            foreach (CurrentWorkout workout in OperatingWorkouts)
             {
                 int exerciseid = await WorkoutDataBase.GetExerciseIdByNameAsync(workout.ExerciseName);
-                workouts.Add(new(){
+                workouts.Add(new()
+                {
                     TrainingId = trainingid,
                     ExerciseId = exerciseid,
                     Sets = workout.Sets,

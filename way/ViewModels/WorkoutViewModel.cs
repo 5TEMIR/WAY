@@ -8,12 +8,11 @@ using way.Models;
 
 namespace way.ViewModels
 {
-    [QueryProperty("OperatingExercise", "Exercise")]
-    public partial class ExerciseViewModel : ObservableObject
+    public partial class WorkoutViewModel : ObservableObject
     {
         private readonly IPopupService popupService;
 
-        public ExerciseViewModel(IPopupService popupservice)
+        public WorkoutViewModel(IPopupService popupservice)
         {
             popupService = popupservice;
 
@@ -21,35 +20,24 @@ namespace way.ViewModels
         }
 
         [ObservableProperty]
-        private CurrentWorkout? _operatingExercise = null;
-
-        //partial void OnOperatingExerciseChanged(Exercise value)
-        //{
-        //    OperatingTitle = value.Title;
-        //    foreach (var reps in value.Reps)
-        //    {
-        //        OperatingReps.Add(reps);
-        //    }
-        //    OperatingTimeRestMin = value.TimeRest / 60;
-        //    OperatingTimeRestSec = value.TimeRest - OperatingTimeRestMin * 60;
-        //}
+        private CurrentWorkout? _operatingWorkout = null;
 
         [ObservableProperty]
         private string _operatingTitle = string.Empty;
 
-        partial void OnOperatingTitleChanged(string value) { CheckExerciseReady(); }
+        partial void OnOperatingTitleChanged(string value) { CheckWorkoutReady(); }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(OperatingTimeRest))]
         private int _operatingTimeRestMin = 0;
 
-        partial void OnOperatingTimeRestMinChanged(int value) { CheckExerciseReady(); }
+        partial void OnOperatingTimeRestMinChanged(int value) { CheckWorkoutReady(); }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(OperatingTimeRest))]
         private int _operatingTimeRestSec = 0;
 
-        partial void OnOperatingTimeRestSecChanged(int value) { CheckExerciseReady(); }
+        partial void OnOperatingTimeRestSecChanged(int value) { CheckWorkoutReady(); }
 
         [ObservableProperty]
         private ObservableCollection<OperatingSet> _operatingSets = [];
@@ -58,19 +46,19 @@ namespace way.ViewModels
         private bool _restIsVisible = false;
 
         [ObservableProperty]
-        private bool _exerciseIsReady = false;
+        private bool _workoutIsReady = false;
 
-        private void CheckExerciseReady()
+        private void CheckWorkoutReady()
         {
             if (OperatingTitle.Length > 0)
             {
                 if (OperatingSets.Count > 1 && (OperatingTimeRestMin > 0 || OperatingTimeRestSec > 0))
-                    ExerciseIsReady = true;
+                    WorkoutIsReady = true;
                 else if (OperatingSets.Count == 1)
-                    ExerciseIsReady = true;
-                else ExerciseIsReady = false;
+                    WorkoutIsReady = true;
+                else WorkoutIsReady = false;
             }
-            else ExerciseIsReady = false;
+            else WorkoutIsReady = false;
         }
 
         public string OperatingTimeRest
@@ -119,7 +107,7 @@ namespace way.ViewModels
 
             if (OperatingSets.Count > 1) { RestIsVisible = true; }
 
-            CheckExerciseReady();
+            CheckWorkoutReady();
         }
 
         [RelayCommand]
@@ -134,7 +122,7 @@ namespace way.ViewModels
                 OperatingTimeRestSec = 0;
             }
 
-            CheckExerciseReady();
+            CheckWorkoutReady();
         }
 
         [RelayCommand]
@@ -155,16 +143,16 @@ namespace way.ViewModels
                 }
             }
 
-            OperatingExercise = new()
+            OperatingWorkout = new()
             {
                 ExerciseName = OperatingTitle.ToLower(),
                 CountSets = OperatingSets.Count,
                 TimeRest = OperatingTimeRestMin * 60 + OperatingTimeRestSec
             };
-            OperatingExercise.SetSets([.. OperatingSets]);
+            OperatingWorkout.SetSets([.. OperatingSets]);
 
             await Shell.Current.GoToAsync("..", true,
-                new Dictionary<string, object> { { "Exercise", OperatingExercise } });
+                new Dictionary<string, object> { { "Workout", OperatingWorkout } });
         }
 
         [RelayCommand]

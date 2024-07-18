@@ -10,7 +10,7 @@ namespace way
 
             Routing.RegisterRoute(nameof(TrainingsPage),typeof(TrainingsPage));
             Routing.RegisterRoute(nameof(TrainingPage),typeof(TrainingPage));
-            Routing.RegisterRoute(nameof(ExercisePage), typeof(ExercisePage));
+            Routing.RegisterRoute(nameof(WorkoutPage), typeof(WorkoutPage));
             Routing.RegisterRoute(nameof(StatisticsPage), typeof(StatisticsPage));
             Routing.RegisterRoute(nameof(StatisticPage), typeof(StatisticPage));
         }

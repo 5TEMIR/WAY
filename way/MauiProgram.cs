@@ -44,14 +44,14 @@ namespace way
             services.AddSingleton<TrainingsViewModel>();
             services.AddSingleton<TrainingViewModel>();
             services.AddSingleton<StatisticsViewModel>();
-            services.AddTransient<ExerciseViewModel>();
+            services.AddTransient<WorkoutViewModel>();
             services.AddTransient<StatisticViewModel>();
 
             //Views
             services.AddSingleton<TrainingsPage>();
             services.AddSingleton<TrainingPage>();
             services.AddSingleton<StatisticsPage>();
-            services.AddTransient<ExercisePage>();
+            services.AddTransient<WorkoutPage>();
             services.AddTransient<StatisticPage>();
 
             //Popups

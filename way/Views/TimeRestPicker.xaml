@@ -55,7 +55,7 @@
 
             <CarouselView
                 Grid.Column="0"
-                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=OperatingTimeRestMin}"
+                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=OperatingTimeRestMin}"
                 HeightRequest="140"
                 ItemsSource="{Binding Times}"
                 PeekAreaInsets="56"
@@ -79,7 +79,7 @@
 
             <CarouselView
                 Grid.Column="1"
-                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ExerciseViewModel}}, Path=OperatingTimeRestSec}"
+                CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=OperatingTimeRestSec}"
                 HeightRequest="140"
                 ItemsSource="{Binding Times}"
                 PeekAreaInsets="56"

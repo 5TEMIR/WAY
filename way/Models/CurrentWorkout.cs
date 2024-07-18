@@ -55,11 +55,11 @@ namespace way.Models
                 else return string.Empty;
             }
         }
-        public string ExerciseLabel
+        public string WorkoutLabel
         {
             get
             {
-                string ExerciseText = string.Empty;
+                string WorkoutText = string.Empty;
                 if (ExerciseName != string.Empty)
                 {
                     if (TimeRest > 0)
@@ -72,7 +72,7 @@ namespace way.Models
                             $"Количество подходов: {CountSets}" +
                             $"\n\n{RepsString}";
                 }
-                return ExerciseText;
+                return WorkoutText;
             }
         }
     }

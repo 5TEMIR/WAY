@@ -86,14 +86,20 @@
 
 	<ItemGroup>
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Fluent.Filled" Version="3.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="LiveChartsCore.SkiaSharpView.Maui" Version="2.0.0-rc2" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.60" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.60" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\WorkoutPage.xaml.cs">
+	    <DependentUpon>WorkoutPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -103,7 +109,7 @@
 	  <MauiXaml Update="Resources\Styles\WayStyles.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\ExercisePage.xaml">
+	  <MauiXaml Update="Views\WorkoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\StatisticsPage.xaml">
@@ -121,9 +127,5 @@
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionwayHideInfoBar="True" /></VisualStudio></ProjectExtensions>
-
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
-		<EnableCodeSigning>false</EnableCodeSigning>
-	</PropertyGroup>
 	
 </Project>

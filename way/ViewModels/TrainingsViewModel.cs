@@ -7,7 +7,6 @@ using way.Views;
 
 namespace way.ViewModels
 {
-    [QueryProperty("OperatingTraining", "Training")]
     [QueryProperty("IsUpdateTrainings", "Update")]
     public partial class TrainingsViewModel : ObservableObject
     {
@@ -23,20 +22,6 @@ namespace way.ViewModels
 
         [ObservableProperty]
         private bool _isUpdateTrainings = false;
-
-        //[ObservableProperty]
-        //private Training? _operatingTraining = null;
-
-        //async partial void OnOperatingTrainingChanged(Training? oldValue, Training? newValue)
-        //{
-        //    if (OperatingTraining is not null && oldValue != newValue)
-        //    {
-        //        await WorkoutDataBase.SaveTrainingAsync(OperatingTraining);
-        //        OperatingTraining = null;
-        //        Trainings = [];
-        //        await LoadTrainingsIncrementlyAsync();
-        //    }
-        //}
 
         [ObservableProperty]
         private ObservableCollection<CurrentTraining> _trainings = [];
