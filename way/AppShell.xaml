@@ -8,17 +8,17 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.TabBarBackgroundColor="{StaticResource Primary}">
 
-    <TabBar>
+    <!-- <TabBar> -->
         <ShellContent
             Title="Тренировки"
             ContentTemplate="{DataTemplate views:TrainingsPage}"
             Icon="{mi:FluentFilled Icon=List24Filled,
                                    IconColor={StaticResource White}}" />
-        <ShellContent
+        <!-- <ShellContent
             Title="Прогресс"
             ContentTemplate="{DataTemplate views:StatisticsPage}"
             Icon="{mi:FluentFilled Icon=ArrowTrendingLines24Filled,
                                    IconColor={StaticResource White}}" />
-    </TabBar>
+    </TabBar> -->
 
 </Shell>

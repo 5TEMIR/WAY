@@ -5,19 +5,38 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Runtime.Versioning;
 using way.Models;
+using way.Services;
 
 namespace way.ViewModels
 {
     public partial class WorkoutViewModel : ObservableObject
     {
-        private readonly IPopupService popupService;
+        private readonly ImuSensorService _imuService;
+        private readonly ImuDataProcessor _dataProcessor;
+        private readonly ExerciseAnalyzer _exerciseAnalyzer;
+        private readonly IPopupService _popupService;
 
-        public WorkoutViewModel(IPopupService popupservice)
+        public WorkoutViewModel(ImuSensorService imuService, ImuDataProcessor dataProcessor, ExerciseAnalyzer exerciseAnalyzer, IPopupService popupservice)
         {
-            popupService = popupservice;
+            _imuService = imuService;
+            _dataProcessor = dataProcessor;
+            _exerciseAnalyzer = exerciseAnalyzer;
+            _popupService = popupservice;
 
             OperatingSets.Add(new OperatingSet(0, 0));
         }
+
+        [ObservableProperty]
+        private bool _isRecording;
+
+        [ObservableProperty]
+        private string _analysisStatus = "Начать отслеживание";
+
+        [ObservableProperty]
+        private string _analysisResult;
+
+        [ObservableProperty]
+        private bool _hasAnalysisResult;
 
         [ObservableProperty]
         private CurrentWorkout? _operatingWorkout = null;
@@ -68,25 +87,25 @@ namespace way.ViewModels
                 if (OperatingTimeRestMin >= 10 && OperatingTimeRestSec >= 10)
                     return $"{OperatingTimeRestMin}:{OperatingTimeRestSec}";
 
-                else if (OperatingTimeRestMin >= 10 && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                else if (OperatingTimeRestMin >= 10 && 0 < OperatingTimeRestSec && OperatingTimeRestSec < 10)
                     return $"{OperatingTimeRestMin}:0{OperatingTimeRestSec}";
 
-                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && OperatingTimeRestSec >= 10)
+                else if (0 < OperatingTimeRestMin && OperatingTimeRestMin < 10 && OperatingTimeRestSec >= 10)
                     return $"0{OperatingTimeRestMin}:{OperatingTimeRestSec}";
 
-                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                else if (0 < OperatingTimeRestMin && OperatingTimeRestMin < 10 && 0 < OperatingTimeRestSec && OperatingTimeRestSec < 10)
                     return $"0{OperatingTimeRestMin}:0{OperatingTimeRestSec}";
 
                 else if (OperatingTimeRestMin == 0 && OperatingTimeRestSec >= 10)
                     return $"00:{OperatingTimeRestSec}";
 
-                else if (OperatingTimeRestMin == 0 && (0 < OperatingTimeRestSec && OperatingTimeRestSec < 10))
+                else if (OperatingTimeRestMin == 0 && 0 < OperatingTimeRestSec && OperatingTimeRestSec < 10)
                     return $"00:0{OperatingTimeRestSec}";
 
                 else if (OperatingTimeRestMin >= 10 && OperatingTimeRestSec == 0)
                     return $"{OperatingTimeRestMin}:00";
 
-                else if ((0 < OperatingTimeRestMin && OperatingTimeRestMin < 10) && OperatingTimeRestSec == 0)
+                else if (0 < OperatingTimeRestMin && OperatingTimeRestMin < 10 && OperatingTimeRestSec == 0)
                     return $"0{OperatingTimeRestMin}:00";
 
                 else return "00:00";
@@ -126,9 +145,71 @@ namespace way.ViewModels
         }
 
         [RelayCommand]
+        private async Task ToggleRecording()
+        {
+            if (IsRecording)
+            {
+                await _imuService.StopRecordingAsync();
+                await AnalyzeRecordedData();
+                AnalysisStatus = "Начать отслеживание";
+            }
+            else
+            {
+                string filePath = Path.Combine(FileSystem.CacheDirectory, $"imu_{DateTime.Now:yyyyMMdd_HHmmss}.bin");
+                _imuService.StartRecording(filePath);
+                AnalysisStatus = "Завершить отслеживание";
+            }
+
+            IsRecording = !IsRecording;
+        }
+
+        private async Task AnalyzeRecordedData()
+        {
+            try
+            {
+                var rawData = new List<ImuData>();
+                await foreach (var item in ImuSensorService.StreamDataAsync(_imuService.CurrentFileName))
+                {
+                    rawData.Add(item);
+                }
+                var processedData = await _dataProcessor.ProcessDataAsync(rawData);
+                var analysis = await _exerciseAnalyzer.AnalyzeExerciseAsync(processedData);
+
+                AnalysisResult = $"Подходы: {analysis.Sets.Count}, Повторения: {analysis.Repetitions.Count}";
+                HasAnalysisResult = true;
+
+                // Автоматическое заполнение подходов
+                foreach (var set in analysis.Sets)
+                {
+                    OperatingSets.Add(new OperatingSet(set.Repetitions.Count, 0));
+                }
+
+                // Автоматическое заполнение времени отдыха (если есть данные)
+                if (analysis.Sets.Count >= 2 && analysis.AverageRestTime > 0)
+                {
+                    int totalSeconds = (int)Math.Round(analysis.AverageRestTime);
+                    OperatingTimeRestMin = totalSeconds / 60;
+                    OperatingTimeRestSec = totalSeconds % 60;
+
+                    // Активируем отображение отдыха, если нужно
+                    if (OperatingSets.Count > 1)
+                    {
+                        RestIsVisible = true;
+                    }
+                }
+
+                CheckWorkoutReady();
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Ошибка анализа", $"Не удалось проанализировать данные: {ex.Message}", "OK");
+            }
+        }
+
+        [RelayCommand]
         private async Task DisplayTimeRestPickerPopupAsync()
         {
-            await popupService.ShowPopupAsync<TimeRestPickerViewModel>();
+            await _popupService.ShowPopupAsync<TimeRestPickerViewModel>();
         }
 
         [RelayCommand]

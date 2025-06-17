@@ -19,8 +19,8 @@ namespace way.Data
             DataBase = new SQLiteAsyncConnection(DatabasePath, Flags);
             await DataBase.CreateTableAsync<Training>();
             await DataBase.CreateTableAsync<Exercise>();
-            await DataBase.ExecuteAsync("CREATE TABLE IF NOT EXISTS Workouts " +
-                "(" +
+            await DataBase.ExecuteAsync(
+                "CREATE TABLE IF NOT EXISTS Workouts (" +
                 "Id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "ExerciseId INTEGER, " +
                 "TrainingId INTEGER, " +

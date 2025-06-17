@@ -2,9 +2,9 @@ using way.ViewModels;
 
 namespace way.Views;
 
-public partial class StatisticsPage : ContentPage
+public partial class TrainingDetailsPage : ContentPage
 {
-	public StatisticsPage(StatisticsViewModel viewmodel)
+	public TrainingDetailsPage(TrainingDetailsViewModel viewmodel)
 	{
 		InitializeComponent();
 

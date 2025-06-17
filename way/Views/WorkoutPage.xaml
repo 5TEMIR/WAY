@@ -18,22 +18,22 @@
         <toolkit:EventToCommandBehavior
             Command="{Binding ShowKeyboardCommand}"
             CommandParameter="{x:Reference Name=EntryTitle}"
-            EventName="NavigatedTo" />
+            EventName="NavigatedTo"/>
     </ContentPage.Behaviors>
 
     <Grid
         Margin="10"
         ColumnDefinitions="*,*"
         ColumnSpacing="10"
-        RowDefinitions="44,44,24,44,*,44"
+        RowDefinitions="44,44,24,44,*,44,auto"
         RowSpacing="10">
 
         <BoxView
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            BackgroundColor="{StaticResource Gray900}"
-            CornerRadius="10" />
+            BackgroundColor="{StaticResource Gray950}"
+            CornerRadius="10"/>
         <Entry
             x:Name="EntryTitle"
             Grid.Row="0"
@@ -45,14 +45,14 @@
             Placeholder="Название упражнения"
             ReturnType="Next"
             Text="{Binding OperatingTitle}"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
 
         <Label
             Grid.Row="1"
             Margin="10,0,10,0"
             FontSize="Title"
             Text="{Binding OperatingSets.Count, StringFormat='Подходы: {0}'}"
-            VerticalTextAlignment="Center" />
+            VerticalTextAlignment="Center"/>
 
         <Label
             Grid.Row="1"
@@ -63,7 +63,7 @@
             Text="{Binding OperatingTimeRest, StringFormat='Отдых: {0}'}"
             VerticalOptions="Center">
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding DisplayTimeRestPickerPopupCommand}" />
+                <TapGestureRecognizer Command="{Binding DisplayTimeRestPickerPopupCommand}"/>
             </Label.GestureRecognizers>
         </Label>
 
@@ -78,21 +78,21 @@
                 Grid.Column="1"
                 Margin="10,0,0,0"
                 HorizontalTextAlignment="Center"
-                Text="Reps" />
+                Text="Reps"/>
             <Label
                 Grid.Row="0"
                 Grid.Column="2"
                 Margin="10,0,0,0"
                 HorizontalTextAlignment="Center"
-                Text="Kg" />
+                Text="Kg"/>
         </Grid>
 
         <BoxView
             Grid.Row="3"
             Grid.RowSpan="2"
             Grid.Column="0"
-            BackgroundColor="{StaticResource Gray900}"
-            CornerRadius="10" />
+            BackgroundColor="{StaticResource Gray950}"
+            CornerRadius="10"/>
         <CollectionView
             Grid.Row="3"
             Grid.RowSpan="2"
@@ -100,32 +100,35 @@
             Margin="10,0,10,0"
             ItemsSource="{Binding OperatingSets}">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout ItemSpacing="0" Orientation="Vertical" />
+                <LinearItemsLayout ItemSpacing="0"
+                        Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:OperatingSet">
-                    <Grid ColumnDefinitions="16,*,*" RowDefinitions="*,auto">
+                    <Grid ColumnDefinitions="16,*,*"
+                            RowDefinitions="*,auto">
                         <Grid>
                             <BoxView
                                 BackgroundColor="{StaticResource Coral Red}"
                                 CornerRadius="8"
                                 HeightRequest="16"
-                                WidthRequest="16" />
+                                WidthRequest="16"/>
                             <BoxView
                                 BackgroundColor="White"
                                 CornerRadius="1"
                                 HeightRequest="2"
-                                WidthRequest="10" />
+                                WidthRequest="10"/>
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=DeleteSetCommand}" CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, x:DataType=viewmodels:WorkoutViewModel, Path=DeleteSetCommand}"
+                                        CommandParameter="{Binding .}"/>
                             </Grid.GestureRecognizers>
                         </Grid>
 
                         <BoxView
                             Grid.Column="1"
                             Margin="10,10,0,10"
-                            BackgroundColor="{StaticResource Gray800}"
-                            CornerRadius="10" />
+                            BackgroundColor="{StaticResource Gray900}"
+                            CornerRadius="10"/>
                         <Entry
                             Grid.Column="1"
                             Margin="10,0,0,0"
@@ -137,15 +140,15 @@
                             Text="{Binding R}"
                             VerticalTextAlignment="Center">
                             <Entry.Behaviors>
-                                <toolkit:SelectAllTextBehavior />
+                                <toolkit:SelectAllTextBehavior/>
                             </Entry.Behaviors>
                         </Entry>
 
                         <BoxView
                             Grid.Column="2"
                             Margin="10,10,0,10"
-                            BackgroundColor="{StaticResource Gray800}"
-                            CornerRadius="10" />
+                            BackgroundColor="{StaticResource Gray900}"
+                            CornerRadius="10"/>
                         <Entry
                             Grid.Column="2"
                             Margin="10,0,0,0"
@@ -157,7 +160,7 @@
                             Text="{Binding W}"
                             VerticalTextAlignment="Center">
                             <Entry.Behaviors>
-                                <toolkit:SelectAllTextBehavior />
+                                <toolkit:SelectAllTextBehavior/>
                             </Entry.Behaviors>
                         </Entry>
 
@@ -171,7 +174,22 @@
             Grid.Column="1"
             Command="{Binding AddSetCommand}"
             Text="Добавить подход"
-            VerticalOptions="Start" />
+            VerticalOptions="Start"/>
+
+        <StackLayout
+            Grid.Row="4"
+            Grid.Column="1"
+            Orientation="Vertical"
+            VerticalOptions="Start"
+            Spacing="10">
+            <Button
+                Text="{Binding AnalysisStatus}"
+                Command="{Binding ToggleRecordingCommand}"
+                BackgroundColor="{StaticResource Coral Red}"/>
+            <Label
+                Text="{Binding AnalysisResult}"
+                IsVisible="{Binding HasAnalysisResult}"/>
+        </StackLayout>
 
         <Button
             Grid.Row="5"
@@ -179,7 +197,7 @@
             Command="{Binding GoToTrainingCommand}"
             HorizontalOptions="Center"
             IsEnabled="{Binding WorkoutIsReady}"
-            Text="Сохранить упражнение" />
+            Text="Сохранить упражнение"/>
 
     </Grid>
 

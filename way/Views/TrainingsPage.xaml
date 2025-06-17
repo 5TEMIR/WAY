@@ -8,12 +8,10 @@
     xmlns:models="clr-namespace:way.Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:way.ViewModels"
-    Title="Тренировки"
     x:DataType="viewmodels:TrainingsViewModel">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding LoadTrainingsIncrementlyCommand}" EventName="Loaded" />
-        <toolkit:EventToCommandBehavior Command="{Binding LoadTrainingsCommand}" EventName="NavigatedTo" />
     </ContentPage.Behaviors>
 
     <Grid RowDefinitions="*,auto">
@@ -22,47 +20,39 @@
             Grid.Row="0"
             ItemsSource="{Binding Trainings}"
             ItemsUpdatingScrollMode="KeepScrollOffset"
-            RemainingItemsThreshold="0"
+            RemainingItemsThreshold="2"
             RemainingItemsThresholdReachedCommand="{Binding LoadTrainingsIncrementlyCommand}">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CurrentTraining">
-                    <Border
-                        Margin="10,10,10,0"
-                        StrokeShape="RoundRectangle 10"
-                        StrokeThickness="0">
-                        <SwipeView android:SwipeView.SwipeTransitionMode="Drag" ios:SwipeView.SwipeTransitionMode="Drag">
-                            <SwipeView.RightItems>
-                                <SwipeItems SwipeBehaviorOnInvoked="Close">
-                                    <SwipeItem
-                                        BackgroundColor="{StaticResource Coral Red}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TrainingsViewModel}}, Path=DeleteTrainingCommand}"
-                                        CommandParameter="{Binding .}"
-                                        Text="Удалить" />
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <Label
-                                Padding="10"
-                                BackgroundColor="{StaticResource Gray900}"
-                                Text="{Binding TrainingLabel}" />
-                        </SwipeView>
-                    </Border>
+                    <Grid Padding="10,10,10,0" ColumnDefinitions="*,auto">
+                        <BoxView
+                            x:Name="TrainingBackground"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="{StaticResource Gray900}"
+                            CornerRadius="10" />
+                        <Label
+                            Grid.Column="0"
+                            Margin="10"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="3"
+                            Text="{Binding TrainingLabel}" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TrainingsViewModel}}, Path=GoToTrainingDetailsCommand}" CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+            <CollectionView.Footer>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" />
+            </CollectionView.Footer>
         </CollectionView>
-
-        <ActivityIndicator
-            Grid.Row="0"
-            Margin="10"
-            HorizontalOptions="Center"
-            IsRunning="{Binding IsBusy}"
-            VerticalOptions="Start" />
 
         <VerticalStackLayout Grid.Row="1">
             <BoxView BackgroundColor="{StaticResource Primary}" HeightRequest="1" />
-
             <Button
                 Margin="10"
                 Command="{Binding GoToTrainingCommand}"

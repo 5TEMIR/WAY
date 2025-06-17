@@ -6,6 +6,7 @@ using way.Data;
 using way.Handlers;
 using way.ViewModels;
 using way.Views;
+using way.Services;
 
 namespace way
 {
@@ -39,20 +40,21 @@ namespace way
         {
             //Services
             services.AddSingleton<DataBaseContext>();
+            services.AddSingleton<ImuSensorService>();
+		    services.AddSingleton<ImuDataProcessor>();
+		    services.AddSingleton<ExerciseAnalyzer>();
 
             //ViewModels
             services.AddSingleton<TrainingsViewModel>();
             services.AddSingleton<TrainingViewModel>();
-            services.AddSingleton<StatisticsViewModel>();
             services.AddTransient<WorkoutViewModel>();
-            services.AddTransient<StatisticViewModel>();
+            services.AddTransient<TrainingDetailsViewModel>();
 
             //Views
             services.AddSingleton<TrainingsPage>();
             services.AddSingleton<TrainingPage>();
-            services.AddSingleton<StatisticsPage>();
             services.AddTransient<WorkoutPage>();
-            services.AddTransient<StatisticPage>();
+            services.AddTransient<TrainingDetailsPage>();
 
             //Popups
             services.AddTransientPopup<TimeRestPicker, TimeRestPickerViewModel>();

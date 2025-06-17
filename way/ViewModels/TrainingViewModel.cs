@@ -12,9 +12,13 @@ namespace way.ViewModels
     {
         private readonly DataBaseContext WorkoutDataBase;
 
-        public TrainingViewModel(DataBaseContext database)
+        private readonly TrainingsViewModel Trainings;
+
+        public TrainingViewModel(DataBaseContext database, TrainingsViewModel trainings)
         {
             WorkoutDataBase = database;
+
+            Trainings = trainings;
         }
 
         [ObservableProperty]
@@ -99,7 +103,9 @@ namespace way.ViewModels
 
             await WorkoutDataBase.SaveWorkoutsAsync(workouts);
 
-            await Shell.Current.GoToAsync($"..?Update={true}", true);
+            await Trainings.LoadTrainingsAsync();
+
+            await Shell.Current.GoToAsync("..", true);
         }
     }
 }

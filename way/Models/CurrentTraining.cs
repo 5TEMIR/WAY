@@ -35,7 +35,26 @@
 
                 if (TrainingDate != DateTime.MinValue)
                 {
-                    TrainingText = $"⚡ {DateString} ⚡\n\n";
+                    List<string> stringexercisenames = [];
+                    TrainingText = $"⚡ {DateString}\n\n" + "\U0001f9be ";
+                    foreach (CurrentWorkout workout in Workouts)
+                    {
+                        stringexercisenames.Add(workout.ExerciseName);
+                    }
+                    TrainingText += string.Join(", ", stringexercisenames);
+                }
+
+                return TrainingText;
+            }
+        }
+        public string TrainingDetails
+        {
+            get
+            {
+                string TrainingText = string.Empty;
+
+                if (TrainingDate != DateTime.MinValue)
+                {
                     foreach (CurrentWorkout workout in Workouts)
                     {
                         TrainingText += $"{workout.WorkoutLabel}\n\n";

@@ -13,31 +13,29 @@
     VerticalOptions="End"
     Color="Transparent">
 
-    <Grid RowDefinitions="auto,auto">
+    <Grid RowDefinitions="auto,auto,auto">
 
-        <BoxView Grid.Row="0" BackgroundColor="{StaticResource Gray950}" />
+        <BoxView Grid.Row="0" BackgroundColor="White" HeightRequest="1"/>
+        <BoxView Grid.Row="1" BackgroundColor="{StaticResource Gray950}" />
         <ImageButton
-            Grid.Row="0"
+            Grid.Row="1"
             Command="{Binding CloseCommand}"
             CommandParameter="{x:Reference TimeRestPickerView}"
-            HeightRequest="28"
             HorizontalOptions="End"
-            Source="{mi:FluentFilled Icon=Dismiss28Filled,
+            Source="{mi:FluentFilled Icon=Dismiss12Filled,
                                      IconColor={StaticResource White}}" />
 
-        <BoxView Grid.Row="1" BackgroundColor="{StaticResource Gray900}" />
+        <BoxView Grid.Row="2" BackgroundColor="{StaticResource Gray900}" />
         <BoxView
-            Grid.Row="1"
+            Grid.Row="2"
             BackgroundColor="{StaticResource Gray800}"
             HeightRequest="28" />
         <Grid
-            Grid.Row="1"
-            Margin="70,0"
+            Grid.Row="2"
             ColumnDefinitions="*,*">
 
-            <Label
+            <!--<Label
                 Grid.Column="0"
-                Margin="56,0,0,0"
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Text="мин"
@@ -46,14 +44,14 @@
 
             <Label
                 Grid.Column="1"
-                Margin="56,0,0,0"
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Text="сек"
                 VerticalOptions="Center"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center" />-->
 
             <CarouselView
+                BackgroundColor="Red"
                 Grid.Column="0"
                 CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=OperatingTimeRestMin}"
                 HeightRequest="140"
@@ -65,19 +63,20 @@
                         ItemSpacing="0"
                         Orientation="Vertical"
                         SnapPointsAlignment="Center"
-                        SnapPointsType="Mandatory" />
+                        SnapPointsType="Mandatory"/>
                 </CarouselView.ItemsLayout>
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="x:Int32">
                         <Label
-                            HorizontalOptions="Center"
+
                             Text="{Binding .}"
-                            VerticalOptions="Center" />
+   
+                            HorizontalTextAlignment="Center"/>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
 
-            <CarouselView
+            <!--<CarouselView
                 Grid.Column="1"
                 CurrentItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WorkoutViewModel}}, Path=OperatingTimeRestSec}"
                 HeightRequest="140"
@@ -99,7 +98,7 @@
                             VerticalOptions="Center" />
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
-            </CarouselView>
+            </CarouselView>-->
 
         </Grid>
 

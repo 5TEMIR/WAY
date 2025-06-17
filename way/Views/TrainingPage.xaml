@@ -18,11 +18,12 @@
         <BoxView
             Grid.Row="0"
             Margin="10"
-            BackgroundColor="{StaticResource Gray900}"
+            BackgroundColor="{StaticResource Gray950}"
             CornerRadius="10" />
         <HorizontalStackLayout
             Grid.Row="0"
             Margin="20,10"
+            Spacing="5"
             VerticalOptions="Center">
             <DatePicker
                 Date="{Binding OperatingDate}"
@@ -53,7 +54,7 @@
                             <BoxView
                                 Grid.Row="1"
                                 Margin="10,0"
-                                BackgroundColor="{StaticResource Gray800}"
+                                BackgroundColor="{StaticResource Gray900}"
                                 HeightRequest="1" />
                         </Grid>
                     </SwipeView>

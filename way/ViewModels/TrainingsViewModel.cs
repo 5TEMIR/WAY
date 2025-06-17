@@ -7,7 +7,6 @@ using way.Views;
 
 namespace way.ViewModels
 {
-    [QueryProperty("IsUpdateTrainings", "Update")]
     public partial class TrainingsViewModel : ObservableObject
     {
         private readonly DataBaseContext WorkoutDataBase;
@@ -21,19 +20,13 @@ namespace way.ViewModels
         private bool _isBusy;
 
         [ObservableProperty]
-        private bool _isUpdateTrainings = false;
-
-        [ObservableProperty]
         private ObservableCollection<CurrentTraining> _trainings = [];
 
         [RelayCommand]
-        private async Task LoadTrainingsAsync()
+        public async Task LoadTrainingsAsync()
         {
-            if (IsUpdateTrainings == false)
-                return;
             Trainings = [];
             await LoadTrainingsIncrementlyAsync();
-            IsUpdateTrainings = false;
         }
 
         [RelayCommand]
@@ -80,27 +73,16 @@ namespace way.ViewModels
         }
 
         [RelayCommand]
-        private async Task DeleteTrainingAsync(CurrentTraining training)
+        private async Task GoToTrainingAsync()
         {
-            await WorkoutDataBase.DeleteWorkoutsByTrainingIdAsync(training.Id);
-            await WorkoutDataBase.DeleteTrainingByIdAsync(training.Id);
-            Trainings?.Remove(training);
+            await Shell.Current.GoToAsync(nameof(TrainingPage), true);
         }
 
         [RelayCommand]
-        private async Task CountsAsync()
+        private async Task GoToTrainingDetailsAsync(CurrentTraining training)
         {
-            List<int> counts = await WorkoutDataBase.GetCounts();
-            await Shell.Current.DisplayAlert("Counts",string.Join(" - ",counts),"ok");
-        }
-        [RelayCommand]
-        private async Task GoToTrainingAsync(Training? training)
-        {
-            if (training is null)
-                await Shell.Current.GoToAsync(nameof(TrainingPage), true);
-            else
-                await Shell.Current.GoToAsync(nameof(TrainingPage), true,
-                    new Dictionary<string, object> { { "Training", training } });
+            await Shell.Current.GoToAsync(nameof(TrainingDetailsPage), true,
+                new Dictionary<string, object> { { "Training", training } });
         }
     }
 }
