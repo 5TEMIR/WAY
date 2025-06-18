@@ -11,55 +11,68 @@
     x:DataType="viewmodels:TrainingsViewModel">
 
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding LoadTrainingsIncrementlyCommand}" EventName="Loaded" />
+        <toolkit:EventToCommandBehavior Command="{Binding LoadTrainingsIncrementlyCommand}"
+                                        EventName="Loaded"/>
     </ContentPage.Behaviors>
 
-    <Grid RowDefinitions="*,auto">
+    <Grid RowDefinitions="*,auto,auto"
+          ColumnDefinitions="*,*">
 
         <CollectionView
             Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             ItemsSource="{Binding Trainings}"
             ItemsUpdatingScrollMode="KeepScrollOffset"
             RemainingItemsThreshold="2"
             RemainingItemsThresholdReachedCommand="{Binding LoadTrainingsIncrementlyCommand}">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" />
+                <LinearItemsLayout Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CurrentTraining">
-                    <Grid Padding="10,10,10,0" ColumnDefinitions="*,auto">
+                    <Grid Padding="10,10,10,0"
+                          ColumnDefinitions="*,auto">
                         <BoxView
                             x:Name="TrainingBackground"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             BackgroundColor="{StaticResource Gray900}"
-                            CornerRadius="10" />
+                            CornerRadius="10"/>
                         <Label
                             Grid.Column="0"
                             Margin="10"
                             LineBreakMode="TailTruncation"
                             MaxLines="3"
-                            Text="{Binding TrainingLabel}" />
+                            Text="{Binding TrainingLabel}"/>
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TrainingsViewModel}}, Path=GoToTrainingDetailsCommand}" CommandParameter="{Binding .}" />
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TrainingsViewModel}}, Path=GoToTrainingDetailsCommand}"
+                                                  CommandParameter="{Binding .}"/>
                         </Grid.GestureRecognizers>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
             <CollectionView.Footer>
-                <ActivityIndicator IsRunning="{Binding IsBusy}" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}"/>
             </CollectionView.Footer>
         </CollectionView>
 
-        <VerticalStackLayout Grid.Row="1">
-            <BoxView BackgroundColor="{StaticResource Primary}" HeightRequest="1" />
-            <Button
+        <BoxView Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 BackgroundColor="{StaticResource Primary}"
+                 HeightRequest="1"/>
+        <Button Grid.Row="2"
+                Grid.Column="1"
                 Margin="10"
                 Command="{Binding GoToTrainingCommand}"
-                HorizontalOptions="Center"
                 Text="Добавить тренировку"
-                VerticalOptions="Center" />
-        </VerticalStackLayout>
+                VerticalOptions="Center"/>
+        <Button Grid.Row="2"
+                Grid.Column="0"
+                Margin="10"
+                Command="{Binding GoToStatisticsCommand}"
+                Text="Статистика"
+                VerticalOptions="Center"/>
     </Grid>
 
 </ContentPage>

@@ -79,6 +79,12 @@ namespace way.ViewModels
         }
 
         [RelayCommand]
+        private async Task GoToStatisticsAsync()
+        {
+            await Shell.Current.GoToAsync(nameof(StatisticsPage), true);
+        }
+
+        [RelayCommand]
         private async Task GoToTrainingDetailsAsync(CurrentTraining training)
         {
             await Shell.Current.GoToAsync(nameof(TrainingDetailsPage), true,

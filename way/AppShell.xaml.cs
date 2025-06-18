@@ -8,10 +8,12 @@ namespace way
         {
             InitializeComponent();
 
-            Routing.RegisterRoute(nameof(TrainingsPage),typeof(TrainingsPage));
-            Routing.RegisterRoute(nameof(TrainingPage),typeof(TrainingPage));
+            Routing.RegisterRoute(nameof(TrainingsPage), typeof(TrainingsPage));
+            Routing.RegisterRoute(nameof(TrainingPage), typeof(TrainingPage));
             Routing.RegisterRoute(nameof(WorkoutPage), typeof(WorkoutPage));
             Routing.RegisterRoute(nameof(TrainingDetailsPage), typeof(TrainingDetailsPage));
+            Routing.RegisterRoute(nameof(StatisticsPage), typeof(StatisticsPage));
+            Routing.RegisterRoute(nameof(ExerciseStatsPage), typeof(ExerciseStatsPage));
         }
     }
 }

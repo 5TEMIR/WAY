@@ -41,20 +41,24 @@ namespace way
             //Services
             services.AddSingleton<DataBaseContext>();
             services.AddSingleton<ImuSensorService>();
-		    services.AddSingleton<ImuDataProcessor>();
-		    services.AddSingleton<ExerciseAnalyzer>();
+            services.AddSingleton<ImuDataProcessor>();
+            services.AddSingleton<ExerciseAnalyzer>();
 
             //ViewModels
             services.AddSingleton<TrainingsViewModel>();
             services.AddSingleton<TrainingViewModel>();
             services.AddTransient<WorkoutViewModel>();
             services.AddTransient<TrainingDetailsViewModel>();
+            services.AddTransient<StatisticsViewModel>();
+            services.AddTransient<ExerciseStatsViewModel>();
 
             //Views
             services.AddSingleton<TrainingsPage>();
             services.AddSingleton<TrainingPage>();
             services.AddTransient<WorkoutPage>();
             services.AddTransient<TrainingDetailsPage>();
+            services.AddTransient<StatisticsPage>();
+            services.AddTransient<ExerciseStatsPage>();
 
             //Popups
             services.AddTransientPopup<TimeRestPicker, TimeRestPickerViewModel>();

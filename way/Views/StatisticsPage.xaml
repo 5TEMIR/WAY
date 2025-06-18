@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="way.Views.StatisticsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:way.ViewModels"
+    xmlns:models="clr-namespace:way.Models"
+    x:DataType="viewmodels:StatisticsViewModel"
+    Title="Статистика">
+    
+    <Grid RowDefinitions="auto,*,auto">
+        <!-- Общая статистика -->
+        <StackLayout Grid.Row="0" Margin="10" Spacing="10">
+            <Label Text="Общая статистика" FontSize="Title" FontAttributes="Bold"/>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="auto,auto">
+                <Label Grid.Row="0" Grid.Column="0" Text="Всего тренировок:"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding TotalTrainings}"/>
+                
+                <Label Grid.Row="1" Grid.Column="0" Text="Всего упражнений:"/>
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding TotalExercises}"/>
+            </Grid>
+        </StackLayout>
+
+        <!-- Список упражнений -->
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Exercises}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Exercise">
+                    <Grid Padding="10,10,10,0"
+                          ColumnDefinitions="*,auto">
+                        <BoxView
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="{StaticResource Gray900}"
+                            CornerRadius="10"/>
+                        <Label
+                            Grid.Column="0"
+                            Margin="10"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="1"
+                            Text="{Binding Name}"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:StatisticsViewModel}}, Path=GoToExerciseStatsCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
